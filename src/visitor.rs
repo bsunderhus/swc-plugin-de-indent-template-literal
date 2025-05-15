@@ -2,10 +2,7 @@ use crate::*;
 use serde::Deserialize;
 use swc_core::{
     common::comments::{CommentKind, Comments},
-    ecma::{
-        ast::Tpl,
-        visit::{as_folder, Folder, VisitMut},
-    },
+    ecma::{ast::Tpl, visit::VisitMut},
 };
 
 #[derive(Debug, Default, Clone, Deserialize)]
@@ -43,9 +40,6 @@ where
             indent_style: config.indent_style,
         }
     }
-    pub fn as_folder(comments: C, config: DeIndentVisitorConfig) -> Folder<Self> {
-        as_folder(Self::new(comments, config))
-    }
 }
 
 impl<C> VisitMut for DeIndentVisitor<C>
@@ -62,7 +56,7 @@ where
                 .unwrap_or_default();
 
             let extracted_comments = comments
-                .extract_if(|comment| {
+                .extract_if(.., |comment| {
                     comment.kind == CommentKind::Block
                         && comment
                             .text

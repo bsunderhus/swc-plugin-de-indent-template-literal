@@ -17,12 +17,12 @@ opt-level = "s"
 strip = "symbols"
 
 [dependencies]
-serde = "1.0.186"
-serde_json = "1.0.79"
-swc_core = { version = "0.90.6", features = ["ecma_plugin_transform", "common"] }
-tracing = { version="0.1.37", features = ["release_max_level_info"] }
+serde = "1.0.219"
+serde_json = "1.0.140"
+swc_core = { version = "22.5.4", features = ["ecma_plugin_transform", "common"] }
+tracing = { version="0.1.41", features = ["release_max_level_info"] }
 
 [dev-dependencies]
-testing = "0.33.21"
-tracing-test = "0.2.4"
-swc_ecma_parser = "0.143.3"
+testing = "10.0.0"
+tracing-test = "0.2.5"
+swc_ecma_parser = "11.1.4"

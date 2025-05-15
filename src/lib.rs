@@ -1,9 +1,12 @@
-#![feature(extract_if)]
 mod utils;
 mod visitor;
 
 use swc_core::{
-    ecma::{ast::Program, visit::VisitMutWith},
+    common::comments::Comments,
+    ecma::{
+        ast::{fn_pass, Pass, Program},
+        visit::VisitMutWith,
+    },
     plugin::{
         plugin_transform,
         proxies::{PluginCommentsProxy, TransformPluginProgramMetadata},
@@ -23,4 +26,13 @@ fn process_transform(mut program: Program, metadata: TransformPluginProgramMetad
     .expect("invalid config for de-indent");
     program.visit_mut_with(&mut DeIndentVisitor::new(PluginCommentsProxy, config));
     program
+}
+
+pub fn de_indent<C>(comments: C, config: DeIndentVisitorConfig) -> impl Pass
+where
+    C: Comments + Clone + 'static,
+{
+    fn_pass(move |program| {
+        program.visit_mut_with(&mut DeIndentVisitor::new(comments.clone(), config.clone()));
+    })
 }

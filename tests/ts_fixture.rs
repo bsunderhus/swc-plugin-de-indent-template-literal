@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 use swc_core::ecma::transforms::testing::test_fixture;
-use swc_ecma_parser::{Syntax, TsConfig};
-use swc_plugin_de_indent_template_literal::*;
+use swc_ecma_parser::{Syntax, TsSyntax};
+use swc_plugin_de_indent_template_literal::de_indent;
 
 #[cfg(test)]
 mod space_tests {
@@ -11,7 +11,7 @@ mod space_tests {
         let output = input.parent().unwrap().join("output.ts");
 
         test_fixture(
-            Syntax::Typescript(TsConfig {
+            Syntax::Typescript(TsSyntax {
                 tsx: true,
                 decorators: false,
                 dts: false,
@@ -19,7 +19,7 @@ mod space_tests {
                 disallow_ambiguous_jsx_like: true,
             }),
             &|tester| {
-                DeIndentVisitor::as_folder(
+                de_indent(
                     tester.comments.clone(),
                     serde_json::from_str("{}").unwrap_or_default(),
                 )
@@ -39,7 +39,7 @@ mod tab_tests {
         let output = input.parent().unwrap().join("output.ts");
 
         test_fixture(
-            Syntax::Typescript(TsConfig {
+            Syntax::Typescript(TsSyntax {
                 tsx: true,
                 decorators: false,
                 dts: false,
@@ -47,7 +47,7 @@ mod tab_tests {
                 disallow_ambiguous_jsx_like: true,
             }),
             &|tester| {
-                DeIndentVisitor::as_folder(
+                de_indent(
                     tester.comments.clone(),
                     serde_json::from_str(r#"{ "indentStyle": "tab" }"#).unwrap_or_default(),
                 )

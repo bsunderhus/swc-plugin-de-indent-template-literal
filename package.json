@@ -1,6 +1,6 @@
 {
   "name": "swc-plugin-de-indent-template-literal",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "SWC plugin for removing indentation of template literals",
   "author": "Bernardo Sunderhus <bernardo.sunderhus@gmail.com>",
   "license": "ISC",
@@ -13,9 +13,10 @@
   ],
   "scripts": {
     "build": "cargo build-wasi --release",
-    "prepack": "npm run build && cp target/wasm32-wasi/release/swc_plugin_de_indent_template_literal.wasm ."
+    "prepack": "npm run build && cp target/wasm32-wasip1/release/swc_plugin_de_indent_template_literal.wasm .",
+    "test": "cargo test"
   },
   "peerDependencies": {
-    "@swc/core": "^1.4.0"
+    "@swc/core": "^1.11.1"
   }
 }
