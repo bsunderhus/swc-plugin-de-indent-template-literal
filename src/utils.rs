@@ -1,21 +1,17 @@
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Clone, Copy)]
+#[derive(Deserialize, Debug, Clone, Copy, Default)]
 pub enum IndentStyle {
     #[serde(rename = "tab")]
     Tab,
     #[serde(rename = "space")]
+    #[default]
     Space,
 }
-impl Default for IndentStyle {
-    fn default() -> Self {
-        IndentStyle::Space
-    }
-}
 
-impl Into<char> for IndentStyle {
-    fn into(self) -> char {
-        match self {
+impl From<IndentStyle> for char {
+    fn from(val: IndentStyle) -> Self {
+        match val {
             IndentStyle::Tab => '\t',
             IndentStyle::Space => ' ',
         }
@@ -196,7 +192,7 @@ pub fn trim_start_until(input: &str, amount: usize, indent_style: IndentStyle) -
     }
     let indent_style: char = indent_style.into();
 
-    for (index, char) in input.chars().enumerate() {
+    for (index, char) in input.char_indices() {
         if char != indent_style {
             let (_, rest) = input.split_at(index);
             result.push_str(rest);

@@ -62,7 +62,7 @@ where
                             .text
                             .to_string()
                             .trim_matches(|char: char| char.is_whitespace() || char == '*')
-                            == &self.tag
+                            == self.tag
                 })
                 .collect::<Vec<_>>();
 
@@ -70,7 +70,7 @@ where
 
             let magic_string = "$$--JOIN_QUASI--$$";
 
-            if extracted_comments.len() > 0 {
+            if !extracted_comments.is_empty() {
                 tpl.quasis
                     .iter()
                     .map(|quasi| quasi.raw.to_string())
