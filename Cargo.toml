@@ -4,8 +4,12 @@ authors = ["Bernardo Sunderhus <bernardo.sunderhus@gmail.com>"]
 description = "SWC plugin for removing indentation of template literal"
 edition = "2021"
 license = "MIT"
+# Kept in sync with package.json's "version" (the npm-published, consumer-facing
+# semver for the distributed .wasm plugin). This crate itself is never published
+# to crates.io (publish = false); the version field exists purely so the two
+# manifests don't drift and confuse maintainers.
 publish = false
-version = "0.1.0"
+version = "1.5.0"
 
 [lib]
 crate-type = ["cdylib", "rlib"]

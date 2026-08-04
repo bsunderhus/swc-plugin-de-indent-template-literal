@@ -130,3 +130,11 @@ someFunction();
 //   <p>hello</p>
 // </div>
 ```
+
+#### Maintaining
+
+This crate is never published to crates.io (`publish = false` in `Cargo.toml`);
+the only published artifact is the compiled `.wasm` binary distributed via npm.
+Keep `Cargo.toml`'s `version` in sync with `package.json`'s `version` on every
+release so the two manifests don't drift, even though only the npm version is
+consumer-facing.
