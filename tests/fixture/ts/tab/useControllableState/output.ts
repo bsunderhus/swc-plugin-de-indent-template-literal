@@ -32,7 +32,7 @@ function isFactoryDispatch<State>(newState: React.SetStateAction<State>): newSta
  * ❗️❗️ Calls to the dispatcher will only modify the state if the state is `uncontrolled`.
  * Meaning that if a state is `controlled`, calls to the dispatcher do not modify the state.
  *
- */ export const useControllableState = <State>(options: UseControllableStateOptions<State>): [State, React.Dispatch<React.SetStateAction<State>>] =>{
+ */ export const useControllableState = <State,>(options: UseControllableStateOptions<State>): [State, React.Dispatch<React.SetStateAction<State>>] =>{
 		const [internalState, setInternalState] = React.useState<State>(()=>{
 				if (options.defaultState === undefined) {
 						return options.initialState;
@@ -67,7 +67,7 @@ function isInitializer<State>(value: State | (() => State)): value is () => Stat
  * Helper hook to handle previous comparison of controlled/uncontrolled
  * Prints an error when isControlled value switches between subsequent renders
  * @returns - whether the value is controlled
- */ const useIsControlled = <V>(controlledValue: V | undefined): controlledValue is V =>{
+ */ const useIsControlled = <V,>(controlledValue: V | undefined): controlledValue is V =>{
 		const [isControlled] = React.useState<boolean>(()=>controlledValue !== undefined);
 		if (process.env.NODE_ENV !== "production") {
 				// We don't want these warnings in production even though it is against native behaviour
