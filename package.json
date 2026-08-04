@@ -4,6 +4,10 @@
   "description": "SWC plugin for removing indentation of template literals",
   "author": "Bernardo Sunderhus <bernardo.sunderhus@gmail.com>",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bsunderhus/swc-plugin-de-indent-template-literal.git"
+  },
   "keywords": [
     "swc-plugin"
   ],
