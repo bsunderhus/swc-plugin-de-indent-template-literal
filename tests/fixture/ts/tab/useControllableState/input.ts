@@ -42,7 +42,7 @@ function isFactoryDispatch<State>(
  * Meaning that if a state is `controlled`, calls to the dispatcher do not modify the state.
  *
  */
-export const useControllableState = <State>(
+export const useControllableState = <State,>(
 	options: UseControllableStateOptions<State>
 ): [State, React.Dispatch<React.SetStateAction<State>>] => {
 	const [internalState, setInternalState] = React.useState<State>(() => {
@@ -88,7 +88,7 @@ function isInitializer<State>(
  * Prints an error when isControlled value switches between subsequent renders
  * @returns - whether the value is controlled
  */
-const useIsControlled = <V>(
+const useIsControlled = <V,>(
 	controlledValue: V | undefined
 ): controlledValue is V => {
 	const [isControlled] = React.useState<boolean>(

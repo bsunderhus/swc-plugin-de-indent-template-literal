@@ -17,6 +17,6 @@
     "test": "cargo test"
   },
   "peerDependencies": {
-    "@swc/core": "^1.11.1"
+    "@swc/core": "^1.15.0"
   }
 }
