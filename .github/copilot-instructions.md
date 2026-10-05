@@ -12,19 +12,25 @@ via npm (see Publishing below), never as a published Rust crate.
 
 ## Build, test, lint
 
-This is a dual Rust/npm project, but **all commands run through cargo** --
-the `npm` scripts are thin wrappers:
+This is a Rust/npm project. The Rust fixture suite checks the native transform;
+the Wasm suite checks the compiled artifact through the SWC host:
 
-- `cargo build` -- native dev build (for iterating on the algorithm/tests).
-- `cargo test` (= `npm test`) -- runs unit tests + both fixture suites.
-- `cargo clippy --all-targets -- -D warnings` -- must be clean; CI enforces this.
-- `cargo build-wasi --release` (= `npm run build`) -- builds the actual
+- `cargo build --locked` -- native dev build (for iterating on the algorithm/tests).
+- `npm run test:rust` (= `cargo test --locked`) -- runs unit tests and the Rust
+  raw/TS fixture suites.
+- `npm run test:swc` -- builds the Wasm artifact and runs every TS fixture
+  through `@swc/core`, with a hard per-fixture subprocess timeout.
+- `npm test` -- runs both the Rust and Wasm suites.
+- `cargo clippy --locked --all-targets -- -D warnings` -- must be clean; CI enforces this.
+- Rust 1.98.1 is pinned in `rust-toolchain.toml` and used in the devcontainer,
+  CI, and publishing workflow. Keep those toolchains aligned; the floating
+  nightly used for 1.5.1 produced a Wasm artifact that hangs in SWC.
+- `cargo build-wasi --locked --release` (= `npm run build`) -- builds the actual
   publishable plugin artifact for `wasm32-wasip1`. This alias is defined in
   `.cargo/config.toml`; there's also a `build-wasm32` alias for
-  `wasm32-unknown-unknown` if needed. Requires
-  `rustup target add wasm32-wasip1`.
-- The devcontainer (`.devcontainer/devcontainer.json`) installs Rust
-  **nightly** (not stable) and the `wasm32-wasip1` target automatically.
+  `wasm32-unknown-unknown` if needed. The pinned toolchain includes the
+  `wasm32-wasip1` target.
+- `npm run prepack` runs the Wasm suite before npm packages the artifact.
 
 ### Running a single test
 
@@ -48,7 +54,7 @@ changing behavior:
    strips it. This has no knowledge of ASTs, comments, or SWC at all -- it's
    testable/reasoned about as plain string manipulation. `IndentStyle`
    (`Tab`/`Space`) picks which character counts as indentation; mixed
-   indentation (e.g. a tab-indented line in space mode) is treated as *no*
+   indentation (e.g. a tab-indented line in space mode) is treated as _no_
    indentation for that line, per `get_line_indentation`.
 
 2. **`src/visitor.rs`** -- the SWC `VisitMut` pass (`DeIndentVisitor`) that
@@ -58,11 +64,12 @@ changing behavior:
      `${...}` interpolations) with a magic separator string
      (`$$--JOIN_QUASI--$$`),
    - runs the joined string through `de_indent` as a single unit (so
-     indentation is computed across the *whole* template, not per-quasi),
+     indentation is computed across the _whole_ template, not per-quasi),
    - splits back on the separator and reassigns each quasi's `raw` value.
-   This join/split-around-interpolations dance is the key non-obvious trick
-   in this file -- it's necessary so indentation detection isn't fooled by
-   quasi boundaries falling mid-line.
+
+This join/split-around-interpolations dance is the key non-obvious trick in
+this file -- it's necessary so indentation detection isn't fooled by quasi
+boundaries falling mid-line.
 
 `src/lib.rs` wires these together: `process_transform` (the `#[plugin_transform]`
 entry point SWC's plugin runtime calls) parses the JSON plugin config into

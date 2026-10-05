@@ -31,8 +31,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Rust nightly
-        uses: dtolnay/rust-toolchain@nightly
+      - name: Install Rust 1.98.1
+        uses: dtolnay/rust-toolchain@1.98.1
         with:
           targets: wasm32-wasip1
 
@@ -40,7 +40,7 @@ jobs:
         uses: Swatinem/rust-cache@v2
 
       - name: Run tests
-        run: cargo test --verbose
+        run: cargo test --locked --verbose
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -65,11 +65,12 @@ jobs:
             exit 1
           fi
 
-      # npm run prepack builds the wasm binary via cargo build-wasi --release
-      # and copies it next to package.json; npm publish triggers prepack
-      # automatically, but we also want the build to fail loudly here first.
-      - name: Build wasm plugin artifact
-        run: npm run build
+      - name: Install npm dependencies
+        run: npm install --no-package-lock
+
+      # Verify the Wasm artifact through the SWC host before publishing.
+      - name: Build and verify wasm plugin artifact
+        run: npm run prepack
 
       # No NODE_AUTH_TOKEN / NPM_TOKEN needed: the npm CLI detects the GitHub
       # Actions OIDC environment automatically and exchanges it for a
