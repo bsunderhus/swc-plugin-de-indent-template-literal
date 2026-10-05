@@ -57,7 +57,7 @@ function normalizeAst(value) {
 async function transform(source, config) {
   const swc = require("@swc/core");
   const options = {
-    filename: "fixture.ts",
+    filename: "fixture.tsx",
     swcrc: false,
     configFile: false,
     jsc: {
