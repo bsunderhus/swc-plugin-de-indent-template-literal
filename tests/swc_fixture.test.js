@@ -1,15 +1,16 @@
-"use strict";
+import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
+import { test } from "node:test";
+import { fileURLToPath } from "node:url";
+import swc from "@swc/core";
 
-const assert = require("node:assert/strict");
-const { spawnSync } = require("node:child_process");
-const fs = require("node:fs");
-const path = require("node:path");
-const { test } = require("node:test");
-
-const scriptPath = __filename;
-const fixtureRoot = path.resolve(__dirname, "fixture", "ts");
+const scriptPath = fileURLToPath(import.meta.url);
+const scriptDirectory = path.dirname(scriptPath);
+const fixtureRoot = path.resolve(scriptDirectory, "fixture", "ts");
 const pluginPath = path.resolve(
-  __dirname,
+  scriptDirectory,
   "..",
   "swc_plugin_de_indent_template_literal.wasm",
 );
@@ -55,7 +56,6 @@ function normalizeAst(value) {
 }
 
 async function transform(source, config) {
-  const swc = require("@swc/core");
   const options = {
     filename: "fixture.tsx",
     swcrc: false,
@@ -82,7 +82,6 @@ async function verifyFixture(inputPath) {
 
   const actualResult = await transform(input, config);
   const expectedResult = await transform(expected);
-  const swc = require("@swc/core");
   const parserOptions = { syntax: "typescript", tsx: true };
 
   assert.deepEqual(
