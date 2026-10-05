@@ -39,7 +39,15 @@ function normalizeAst(value) {
     Object.entries(value)
       .filter(
         ([key]) =>
-          !["span", "ctxt", "leadingComments", "trailingComments", "innerComments"].includes(key) &&
+          ![
+            "span",
+            "ctxt",
+            "start",
+            "end",
+            "leadingComments",
+            "trailingComments",
+            "innerComments",
+          ].includes(key) &&
           (key !== "raw" || value.type === "TplElement"),
       )
       .map(([key, child]) => [key, normalizeAst(child)]),
