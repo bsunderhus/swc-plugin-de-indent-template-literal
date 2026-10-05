@@ -16,9 +16,14 @@
     "swc_plugin_de_indent_template_literal.wasm"
   ],
   "scripts": {
-    "build": "cargo build-wasi --release",
-    "prepack": "npm run build && cp target/wasm32-wasip1/release/swc_plugin_de_indent_template_literal.wasm .",
-    "test": "cargo test"
+    "build": "cargo build-wasi --locked --release",
+    "test:rust": "cargo test --locked",
+    "test:swc": "npm run build && cp target/wasm32-wasip1/release/swc_plugin_de_indent_template_literal.wasm . && node --test tests/swc_fixture.test.cjs",
+    "test": "npm run test:rust && npm run test:swc",
+    "prepack": "npm run test:swc"
+  },
+  "devDependencies": {
+    "@swc/core": "1.15.47"
   },
   "peerDependencies": {
     "@swc/core": "^1.15.0"
