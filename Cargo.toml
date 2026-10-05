@@ -9,7 +9,7 @@ license = "MIT"
 # to crates.io (publish = false); the version field exists purely so the two
 # manifests don't drift and confuse maintainers.
 publish = false
-version = "1.5.1"
+version = "1.5.2"
 
 [lib]
 crate-type = ["cdylib", "rlib"]

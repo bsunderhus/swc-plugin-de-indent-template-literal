@@ -1,6 +1,6 @@
 {
   "name": "swc-plugin-de-indent-template-literal",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "type": "module",
   "description": "SWC plugin for removing indentation of template literals",
   "author": "Bernardo Sunderhus <bernardo.sunderhus@gmail.com>",

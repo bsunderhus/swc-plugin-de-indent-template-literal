@@ -1,7 +1,7 @@
 name: Publish to npm
 
 # Triggered by pushing a version tag, e.g.:
-#   git tag v1.5.1 && git push origin v1.5.1
+#   git tag v1.5.2 && git push origin v1.5.2
 # Tag version must match package.json's "version" (checked below) so a
 # publish always corresponds to an intentional, reviewed release commit.
 #
@@ -68,14 +68,11 @@ jobs:
       - name: Install npm dependencies
         run: npm install --no-package-lock
 
-      # Verify the Wasm artifact through the SWC host before publishing.
-      - name: Build and verify wasm plugin artifact
-        run: npm run prepack
-
       # No NODE_AUTH_TOKEN / NPM_TOKEN needed: the npm CLI detects the GitHub
       # Actions OIDC environment automatically and exchanges it for a
       # short-lived publish token via the trusted publisher configured on
       # npmjs.com. Provenance attestations are generated automatically too
       # (no --provenance flag required).
+        # npm publish runs prepack automatically to build and verify the Wasm artifact.
       - name: Publish to npm
         run: npm publish --access public
