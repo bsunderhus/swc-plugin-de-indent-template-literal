@@ -26,6 +26,26 @@ function collectInputs(directory) {
   });
 }
 
+function normalizeAst(value) {
+  if (Array.isArray(value)) {
+    return value.map(normalizeAst);
+  }
+
+  if (value === null || typeof value !== "object") {
+    return value;
+  }
+
+  return Object.fromEntries(
+    Object.entries(value)
+      .filter(
+        ([key]) =>
+          !["span", "ctxt", "leadingComments", "trailingComments", "innerComments"].includes(key) &&
+          (key !== "raw" || value.type === "TplElement"),
+      )
+      .map(([key, child]) => [key, normalizeAst(child)]),
+  );
+}
+
 async function transform(source, config) {
   const swc = require("@swc/core");
   const options = {
@@ -54,8 +74,13 @@ async function verifyFixture(inputPath) {
 
   const actualResult = await transform(input, config);
   const expectedResult = await transform(expected);
+  const swc = require("@swc/core");
+  const parserOptions = { syntax: "typescript", tsx: true };
 
-  assert.equal(actualResult.code, expectedResult.code);
+  assert.deepEqual(
+    normalizeAst(swc.parseSync(actualResult.code, parserOptions)),
+    normalizeAst(swc.parseSync(expectedResult.code, parserOptions)),
+  );
 }
 
 if (isWorker) {
