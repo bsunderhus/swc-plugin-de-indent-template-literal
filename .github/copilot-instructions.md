@@ -65,7 +65,7 @@ changing behavior:
      (`$$--JOIN_QUASI--$$`),
    - runs the joined string through `de_indent` as a single unit (so
      indentation is computed across the _whole_ template, not per-quasi),
-  - splits back on the separator and reassigns each quasi's `raw` value.
+   - splits back on the separator and reassigns each quasi's `raw` value.
 
 This join/split-around-interpolations dance is the key non-obvious trick in
 this file -- it's necessary so indentation detection isn't fooled by quasi
